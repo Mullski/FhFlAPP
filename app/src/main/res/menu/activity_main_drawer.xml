@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_editor"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Editor" />
+        <item
+            android:id="@+id/nav_tdList"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="To-DO-Liste" />
+        <item
+            android:id="@+id/nav_navi"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Navi" />
+        <item
+            android:id="@+id/nav_radio"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Internet-Radio" />
+        <item
+            android:id="@+id/nav_Fviewer"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="File Viewer" />
+    </group>
+
+
+</menu>
