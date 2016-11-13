@@ -10,12 +10,18 @@ import android.support.v7.widget.Toolbar;
 import android.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.streich.todo.TodoFragment;
+
+import static com.example.antonimuller.fhflapp.R.id.toolbar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ExampleFragment exFragment1;
     private ExampleFragment exFragment2;
+
+    private TodoFragment todos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +29,7 @@ public class MainActivity extends AppCompatActivity
         //Beispiel Fragmente instanziieren
         exFragment1=new ExampleFragment(1);
         exFragment2=new ExampleFragment(2);
+        todos = new TodoFragment();
 
 
 
@@ -92,7 +99,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_tdList:
 
                 fragTransaction = getFragmentManager().beginTransaction();
-                fragTransaction.replace(R.id.fragment_container, exFragment2);
+                fragTransaction.replace(R.id.fragment_container, todos);
                 fragTransaction.addToBackStack(null);
                 fragTransaction.commit();
                 break;
