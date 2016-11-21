@@ -188,4 +188,9 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
 
         return true;
     }
+
+    @Override
+    public void onClick(View view) {
+        
+    }
 }
