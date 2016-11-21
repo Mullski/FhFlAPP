@@ -48,13 +48,12 @@ public class TodoFragment extends Fragment implements View.OnClickListener, Adap
 
 
         //Connect the Model to the UI
-        x = new TodoListAdapter(getActivity(), R.layout.todo_row,model);
+        x = new TodoListAdapter(getActivity(), R.layout.todo_row, model);
         todoList.setAdapter(x);
 
         //Set EventListners
         fragmentView.findViewById(R.id.AddButton).setOnClickListener(this);
         todoList.setOnItemClickListener(this);
-
 
 
         return fragmentView;
