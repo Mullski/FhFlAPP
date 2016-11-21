@@ -5,4 +5,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+
+    <string name="fileviewer_folder">Folder</string>
+    <string name="fileviewer_file">File</string>
+    <string name="fileviewer_homedirectory">Home</string>
+    <string name="fileviewer_missingpermissions">Missing Permissions</string>
+    <string name="fileviewer_openfileusing">Open File using</string>
+    <string name="fileviewer_folderfiles">Elements</string>
 </resources>

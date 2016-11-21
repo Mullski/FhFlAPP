@@ -11,6 +11,8 @@ import android.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.streich.todo.TodoFragment;
+import com.fileviewer.FileViewerFragment;
+
 
 import static com.example.antonimuller.fhflapp.R.id.toolbar;
 
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity
     private ExampleFragment exFragment2;
 
     private TodoFragment todos;
+    private FileViewerFragment fileView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity
         exFragment1=new ExampleFragment(1);
         exFragment2=new ExampleFragment(2);
         todos = new TodoFragment();
+        fileView = new FileViewerFragment();
 
 
 
@@ -111,6 +115,10 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_Fviewer:
                 //File Viewer Fragment
+                fragTransaction = getFragmentManager().beginTransaction();
+                fragTransaction.replace(R.id.fragment_container, fileView);
+                fragTransaction.addToBackStack(null);
+                fragTransaction.commit();
                 break;
             default:
                 fragTransaction = getFragmentManager().beginTransaction();
