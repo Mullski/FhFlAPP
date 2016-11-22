@@ -56,6 +56,7 @@ public class TodoFragment extends Fragment implements View.OnClickListener, Adap
         todoList.setOnItemClickListener(this);
 
 
+
         return fragmentView;
     }
 

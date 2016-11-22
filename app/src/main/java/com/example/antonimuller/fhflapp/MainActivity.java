@@ -1,5 +1,7 @@
 package com.example.antonimuller.fhflapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -8,22 +10,26 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.streich.todo.TodoFragment;
-import com.fileviewer.FileViewerFragment;
+import android.widget.MultiAutoCompleteTextView;
 
+import com.streich.todo.TodoFragment;
 
 import static com.example.antonimuller.fhflapp.R.id.toolbar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    String TAG ="MainActivity";
 
     private ExampleFragment exFragment1;
     private ExampleFragment exFragment2;
 
     private TodoFragment todos;
-    private FileViewerFragment fileView;
+    private TextEditorFragment textEditorFragment;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +39,21 @@ public class MainActivity extends AppCompatActivity
         exFragment1=new ExampleFragment(1);
         exFragment2=new ExampleFragment(2);
         todos = new TodoFragment();
-        fileView = new FileViewerFragment();
+
+
+
+        textEditorFragment = new TextEditorFragment(getIntent());
+        getFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, textEditorFragment).commit();
 
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
+
 
 
         getFragmentManager().beginTransaction()
@@ -96,7 +111,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_editor:
 
                 FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
-                fragTransaction.replace(R.id.fragment_container, exFragment1);
+                fragTransaction.replace(R.id.fragment_container, textEditorFragment);
                 fragTransaction.addToBackStack(null);
                 fragTransaction.commit();
                 break;
@@ -115,10 +130,6 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_Fviewer:
                 //File Viewer Fragment
-                fragTransaction = getFragmentManager().beginTransaction();
-                fragTransaction.replace(R.id.fragment_container, fileView);
-                fragTransaction.addToBackStack(null);
-                fragTransaction.commit();
                 break;
             default:
                 fragTransaction = getFragmentManager().beginTransaction();
