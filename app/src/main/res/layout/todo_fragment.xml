@@ -5,43 +5,33 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
-        android:visibility="invisible"
-        android:paddingTop="10dp">
+        android:id="@+id/TodoSelectorBar"
+        android:padding="5dp">
 
-        <EditText
+        <TextView
+            android:text="Todos anzeigen: "
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/todo_title_input"
-            android:layout_weight="1"
-            android:hint="Titel" />
+            android:layout_height="wrap_content" />
 
         <Button
-            android:text="+"
-            android:layout_width="wrap_content"
+            android:text="Alle"
+            android:onClick=""
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/AddButton"
-            android:layout_weight="1"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:elevation="0dp"
-            android:textSize="24sp"
-            android:onClick="onAddTodo"
-            android:textAlignment="center" />
+            android:id="@+id/todo_selection_button"
+            style="@android:style/Widget.Material.Light.Button.Borderless.Colored" />
     </LinearLayout>
-
-
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
+        android:layout_alignBaseline="@id/TodoSelectorBar"
+        android:layout_below="@id/TodoSelectorBar"
         android:id="@+id/listV"/>
 
     <io.github.yavski.fabspeeddial.FabSpeedDial

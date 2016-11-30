@@ -12,6 +12,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import static android.R.attr.category;
+
 /**
  * Created by basti on 26.10.2016.
  * Holds a Collection of TodoModels, synchronises itself with a LocalStorage.
@@ -20,12 +22,24 @@ public class TodoListHolder extends ArrayList<com.streich.todo.TodoModel>{
     final static String sharedPrefKey ="com.streich.TodoList";
     final static String key = "TodoListHolder";
 
+    private static TodoListHolder instance;
+    public static TodoListHolder getMe(){
+        if(instance==null){
+            instance= new TodoListHolder();
+        }
+        return instance;
+
+    }
+
+    private ArrayList<String> categories;
+
+    public ArrayList<String> getCategorys (){
+        return categories;
+    }
 
 
-
-
-    public TodoListHolder() {
-
+    private TodoListHolder() {
+        categories= new ArrayList<>();
     }
 
     public void fetch(Context c){
@@ -43,7 +57,14 @@ public class TodoListHolder extends ArrayList<com.streich.todo.TodoModel>{
             this.add(x.get(i));
         }
 
+        for(TodoModel model : this){
+            if(!categories.contains(model.category)){
+                categories.add(model.category);
+            }
+        }
+
         Log.v(key,"Fetched "+x.size()+" Todos from Storage");
+        Log.v(key,"List contains "+categories.size()+" Diffrent Categories");
 
     }
 
