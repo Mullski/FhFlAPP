@@ -16,7 +16,7 @@ import com.example.antonimuller.fhflapp.R;
  * Created by basti on 29.11.2016.
  */
 
-public class CategoryDialog extends DialogFragment  implements DialogInterface.OnClickListener{
+public class CreateCategoryDialog extends DialogFragment  implements DialogInterface.OnClickListener{
 
     View thisView;
     private CategoryListner categoryListner;
@@ -43,7 +43,7 @@ public class CategoryDialog extends DialogFragment  implements DialogInterface.O
             //Pressed Yes
             EditText input = (EditText) thisView.findViewById(R.id.todo_editText_newCategory);
             String t = input.getText().toString();
-            Log.v("Todo-CategoryDialog","New Category "+t);
+            Log.v("Todo-CreateCategoryDialog","New Category "+t);
             if(t.length() >0 && categoryListner != null){
                 categoryListner.onNewCategory(t);
             }

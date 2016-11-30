@@ -24,7 +24,7 @@ import io.github.yavski.fabspeeddial.FabSpeedDial;
 
 public class TodoFragment extends Fragment implements
         View.OnClickListener, AdapterView.OnItemClickListener,
-        FabSpeedDial.MenuListener, CategoryDialog.CategoryListner,
+        FabSpeedDial.MenuListener, CreateCategoryDialog.CategoryListner,
         SelectCategoryDialog.SelectionListener
 {
     final static String key ="Todo-Fragment";
@@ -36,9 +36,9 @@ public class TodoFragment extends Fragment implements
     View            fragmentView;
     ListView        todoList;
     Button selectorButton;
-    CategoryDialog  categoryDialog;
-    SelectCategoryDialog    selectCategoryDialog;
-
+    CreateCategoryDialog   createCategoryDialog;
+    SelectCategoryDialog   selectCategoryDialog;
+    CreateTodoDialog       createTodoDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.todo_fragment, container, false);
@@ -49,8 +49,9 @@ public class TodoFragment extends Fragment implements
         FabSpeedDial fabSpeedDial   = (FabSpeedDial) fragmentView.findViewById(R.id.todo_appButton);
 
         //Initalise the Dialogues
-        categoryDialog          = new CategoryDialog();
-        selectCategoryDialog    = new SelectCategoryDialog();
+        createCategoryDialog = new CreateCategoryDialog();
+        selectCategoryDialog = new SelectCategoryDialog();
+        createTodoDialog     = new CreateTodoDialog();
 
         selectCategoryDialog.setAllVisibility(true);
         //Fetch the Model
@@ -65,7 +66,7 @@ public class TodoFragment extends Fragment implements
         //Set EventListners
         todoList.setOnItemClickListener(this);
         selectorButton.setOnClickListener(this);
-        categoryDialog.setCategoryListner(this);
+        createCategoryDialog.setCategoryListner(this);
         fabSpeedDial.setMenuListener(this);
         selectCategoryDialog.setSelectionListener(this);
         return fragmentView;
@@ -85,11 +86,11 @@ public class TodoFragment extends Fragment implements
     public boolean onMenuItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.todo_new_category:
-                categoryDialog.show(getFragmentManager(),"");
+                createCategoryDialog.show(getFragmentManager(),"");
                 break;
             case R.id.todo_new_todo:
                 Log.v(key,"New Todo");
-                //Prepare a Add an TODO Dialog.
+                createTodoDialog.show(getFragmentManager(),"");
 
                 break;
         }

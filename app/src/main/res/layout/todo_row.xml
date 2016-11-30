@@ -3,7 +3,8 @@
         android:orientation="horizontal" android:layout_width="match_parent"
         android:descendantFocusability="blocksDescendants"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="5dp">
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -19,5 +20,6 @@
             android:layout_height="match_parent"
             android:id="@+id/todo_row_title"
             android:text="lel"
-           />
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp" />
 </LinearLayout>
