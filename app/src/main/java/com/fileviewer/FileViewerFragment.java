@@ -1,6 +1,9 @@
 package com.fileviewer;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -8,14 +11,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.antonimuller.fhflapp.R;
@@ -23,16 +31,21 @@ import com.fileviewer.Adapter.ListViewAdapter;
 import com.fileviewer.Model.ListingsModel;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import static com.fileviewer.Util.copyFileOrDirectory;
+import static com.fileviewer.Util.copyFileToFile;
+import static com.fileviewer.Util.isReadable;
 
 /**
  * Created by Donny on 17.11.2016.
  */
 
-public class FileViewerFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener , ActivityCompat.OnRequestPermissionsResultCallback {
-    private static final String TAG = "FHFLAPP: FileViewerFragment";
+public class FileViewerFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
+    private static final String TAG = "FHFLAPP: FileViewer";
 
     private static final String CURRENT_DIR_DIR = "current-dir";
 
@@ -40,6 +53,7 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
 
     private View fragmentView;
     public File currentDir;
+    public File copyFile = null;
     private ListingsModel files;
     private ListView fileList;
     private ListViewAdapter x;
@@ -58,11 +72,12 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.v(TAG, "onCreateView():");
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         // Check Permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             if (ContextCompat.checkSelfPermission(getActivity(),
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -80,14 +95,15 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
 
         fileList.setAdapter(x);
         fileList.setOnItemClickListener(this);
-        fileList.setOnItemLongClickListener(this);
 
         initDir(savedInstanceState);
 
+        registerForContextMenu(fileList);
         return fragmentView;
     }
 
     public void initDir(Bundle savedInstanceState) {
+        Log.v(TAG, "initDir():");
         if (savedInstanceState!=null && savedInstanceState.getSerializable(CURRENT_DIR_DIR) != null) {
             currentDir = new File(savedInstanceState
                     .getSerializable(CURRENT_DIR_DIR).toString());
@@ -105,7 +121,152 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         outState.putSerializable(CURRENT_DIR_DIR, currentDir.getAbsolutePath());
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        Log.v(TAG, "onCreateContextMenu():");
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.fileviewer_context_menu, menu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.v(TAG, "onCreateOptionsMenu():");
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fileviewer_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected():");
+        switch (item.getItemId()) {
+            case R.id.action_createfile:
+                Log.d(TAG, "action_createfile():");
+                if(!checkWritePermissions(currentDir)) {
+                    return true;
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.fileviewer_filename);
+
+                final EditText input = new EditText(getActivity());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                // Set up the buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String inputText = input.getText().toString();
+                        try {
+                            File newFile = new File(getPathInfo(inputText));
+                            Log.d(TAG, "NewFilePath " + getPathInfo(inputText));
+                            newFile.createNewFile();
+                            initCurrentDirAndChilren();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
+                return true;
+            case R.id.action_createfolder:
+                Log.d(TAG, "action_createfolder():");
+
+                if(!checkWritePermissions(currentDir)) {
+                    return true;
+                }
+
+                AlertDialog.Builder builderFolder = new AlertDialog.Builder(getActivity());
+                builderFolder.setTitle(R.string.fileviewer_foldername);
+
+                final EditText inputFolder = new EditText(getActivity());
+                inputFolder.setInputType(InputType.TYPE_CLASS_TEXT);
+                builderFolder.setView(inputFolder);
+
+                builderFolder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String inputText = inputFolder.getText().toString();
+                        File newFolder = new File(getPathInfo(inputText));
+                        Log.d(TAG, "NewFolderPath " + getPathInfo(inputText) + "/");
+                        if (!newFolder.exists()) {
+                            newFolder.mkdirs();
+                        }
+                        initCurrentDirAndChilren();
+                    }
+                });
+                builderFolder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builderFolder.show();
+                return true;
+            case R.id.action_paste:
+                Log.d(TAG, "action_paste():");
+                if(checkWritePermissions(currentDir) && copyFile != null) {
+                    copyFileOrDirectory(copyFile.getPath(), currentDir.getAbsolutePath());
+                    initCurrentDirAndChilren();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Log.d(TAG, "onContextItemSelected():");
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        File editItem = x.getItem(info.position);
+
+        checkReadPermissions(editItem);
+
+        switch(item.getItemId()) {
+            case R.id.action_open:
+                if(editItem.isDirectory()) {
+                    updateDir(editItem);
+                }
+                else {
+                    openFile(editItem);
+                }
+                return true;
+            case R.id.action_delete:
+                if(checkWritePermissions(editItem)) {
+                    deleteFile(editItem);
+                    initCurrentDirAndChilren();
+                }
+                return true;
+            case R.id.action_copy:
+                copyFile = editItem;
+                return true;
+            case R.id.action_paste:
+                if(editItem.isDirectory() && checkWritePermissions(editItem) && copyFile != null) {
+                    Log.d(TAG, "action_paste():");
+                    if(currentDir.isDirectory() && checkWritePermissions(currentDir)) {
+                        copyFileOrDirectory(copyFile.getPath(), editItem.getAbsolutePath());
+                        initCurrentDirAndChilren();
+                    }
+                }
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+
     private void initCurrentDirAndChilren() {
+        Log.d(TAG, "initCurrentDirAndChilren():");
+        currentDir = new File(currentDir.getAbsolutePath());
         String[] children = currentDir.list();
         files.children.clear();
 
@@ -128,18 +289,20 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         if(currentDir.getParent() != null) {
             files.children.add(0, currentDir.getParentFile());
         }
+
+        x.notifyDataSetChanged();
     }
 
-    @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Log.v(TAG, "Clicked on an Item");
 
         File clickedItem = x.getItem(i);
-        if(!clickedItem.canRead() && !clickedItem.canWrite()) {
-            Toast toast = Toast.makeText(getActivity(), R.string.fileviewer_missingpermissions, Toast.LENGTH_SHORT);
-            toast.show();
+
+        if(!checkReadPermissions(clickedItem)) {
+            return;
         }
-        else if(clickedItem.isDirectory()){
+
+        if(clickedItem.isDirectory()){
             updateDir(clickedItem);
         }
         else {
@@ -153,6 +316,7 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
     }
 
     public void updateDir(File newDir){
+        Log.v(TAG, "updateDir(" + newDir + "):");
         if(newDir.isDirectory() && newDir.canRead()) {
             String filePath = newDir.getAbsolutePath();
             currentDir = new File(filePath);
@@ -161,7 +325,6 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
             fileList.setSelectionAfterHeaderView();
             fileList.setSelection(0);
         }
-        x.notifyDataSetChanged();
     }
 
     public String getPathInfo(String fileName) {
@@ -172,6 +335,7 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
     }
 
     private void openFile(File file) {
+        Log.v(TAG, "openFile()");
         Intent intent = new Intent();
         intent.setAction(android.content.Intent.ACTION_VIEW);
         Uri uri = Uri.fromFile(file);
@@ -182,15 +346,44 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
                 getString(R.string.fileviewer_openfileusing))));
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Log.v(TAG, "Clicked on an Item Long");
-
-        return true;
-    }
 
     @Override
     public void onClick(View view) {
-        
+
+    }
+
+
+    public Boolean checkReadPermissions(File file) {
+        if(file.canRead()) {
+            return true;
+        }
+        else {
+            Toast toast = Toast.makeText(getActivity(), R.string.fileviewer_missingpermissions, Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
+    }
+    public Boolean checkWritePermissions(File file) {
+        if(file.canRead() && file.canWrite()) {
+            return true;
+        }
+        else {
+            Toast toast = Toast.makeText(getActivity(), R.string.fileviewer_missingpermissions, Toast.LENGTH_SHORT);
+            toast.show();
+            return false;
+        }
+    }
+
+
+    public void deleteFile(File file) {
+        if (file.isDirectory())
+        {
+            String[] children = file.list();
+            for (int i = 0; i < children.length; i++)
+            {
+                deleteFile(new File(file, children[i]));
+            }
+        }
+        file.delete();
     }
 }

@@ -62,7 +62,7 @@ public class ListViewAdapter extends ArrayAdapter<File> {
 
             fileIcon.setImageDrawable(Util.getFileTypeIcon(getContext(), p));
 
-            if(!p.isFile() && p.list() != null) {
+            if(p.isDirectory() && p.list() != null) {
                 String eleString = getContext().getResources().getString(R.string.fileviewer_folderfiles);
                 folderElements.setText(p.list().length + " " + eleString);
             }

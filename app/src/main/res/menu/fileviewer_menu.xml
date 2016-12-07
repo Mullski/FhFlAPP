@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_createfile"
+        android:title="@string/fileviewer_newfile" />
+    <item
+        android:id="@+id/action_createfolder"
+        android:title="@string/fileviewer_newfolder" />
+    <item
+        android:id="@+id/action_paste"
+        android:title="@string/fileviewer_paste" />
+</menu>
