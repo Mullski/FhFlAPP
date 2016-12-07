@@ -1,13 +1,16 @@
 package com.streich.todo;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.internal.NavigationMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -30,8 +33,7 @@ public class TodoFragment extends Fragment implements
         View.OnClickListener, AdapterView.OnItemClickListener,
         FabSpeedDial.MenuListener, CreateCategoryDialog.CategoryListner,
         SelectCategoryDialog.SelectionListener,
-        CreateTodoDialog.CreateTodoListener
-{
+        CreateTodoDialog.CreateTodoListener, AdapterView.OnItemLongClickListener {
     final static String key ="Todo-Fragment";
 
 
@@ -76,6 +78,7 @@ public class TodoFragment extends Fragment implements
 
         //Set EventListners
         todoList.setOnItemClickListener(this);
+        todoList.setOnItemLongClickListener(this);
         selectorButton.setOnClickListener(this);
         createCategoryDialog.setCategoryListner(this);
         fabSpeedDial.setMenuListener(this);
@@ -86,10 +89,39 @@ public class TodoFragment extends Fragment implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.v(key,"Clicked on an Item");
+        //Log.v(key,"Clicked on an Item");
         TodoModel clickedItem = listAdapter.getItem(position);
         clickedItem.done= !clickedItem.done;
         listAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        final TodoModel clickedItem = listAdapter.getItem(position);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Todo Löschen?");
+        builder.setMessage("Möchten sie '"+ clickedItem.title +"' wirklich Löschen?");
+        builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v(key,"Not Deleting selected Item");
+            }
+        });
+        builder.setPositiveButton("Ja Löschen", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                model.remove(clickedItem);
+
+                Log.v(key,"Deleting selected Item");
+                if( !selectedCategory.equals("Alle")  && clickedItem.category.equals(selectedCategory)) {
+                    viewModel.remove(clickedItem);
+                }
+                listAdapter.notifyDataSetChanged();
+            }
+        });
+        builder.show();
+        return false;
     }
 
 
@@ -172,24 +204,6 @@ public class TodoFragment extends Fragment implements
         }
         listAdapter.notifyDataSetChanged();
     }
+
+
 }
-
-/*
-
-Context con = getActivity();
-                model.commmit(con);
-
-
-
-
-                //Add a New item to the List.
-                String input = title_input.getText().toString();
-
-                if(input.length()>0){
-                    Log.v(key,"Adding new Todo");
-                    model.add(new TodoModel(title_input.getText().toString()));
-
-                    title_input.setText("");
-                    listAdapter.notifyDataSetChanged();
-                }
- */
