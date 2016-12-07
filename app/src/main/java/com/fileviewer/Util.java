@@ -14,10 +14,15 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 /**
- * Created by Donny on 21.11.2016.
+ * Class containing some static Util Functions
  */
-
 public class Util {
+    /**
+     * getFileTypeIcon
+     * Function returns drawable icon based on the given file type
+     * @param mContext
+     * @param file
+     */
     public static Drawable getFileTypeIcon(Context mContext, File file) {
         if(!file.isFile()) {
             if (!file.canRead() && !file.canWrite()) {
@@ -71,7 +76,6 @@ public class Util {
         else
             return (type.toLowerCase().startsWith("video/"));
     }
-
     public static boolean isPicture(File file) {
 
         Uri uri = Uri.fromFile(file);
@@ -83,29 +87,16 @@ public class Util {
             return (type.toLowerCase().startsWith("image/"));
     }
 
-    public static boolean isReadable(File file) {
-        if(file.canRead()) {
-            return true;
-        }
-        return false;
-    }
-
     /**
-     * Kopierte Methode von http://stackoverflow.com/questions/9292954/how-to-make-a-copy-of-a-file-in-android
-     * @param src
-     * @param dst
+     * copyFileOrDirectory
+     * Copied Source from http://stackoverflow.com/questions/9292954/how-to-make-a-copy-of-a-file-in-android
+     * Copies given file or directory
+     * @param String src
+     * String absolute Path of source file
+     * @param String dst
+     * String absolute Path of destination
      * @throws IOException
      */
-    public static void copyFileToFile(File src, File dst) throws IOException {
-        FileInputStream inStream = new FileInputStream(src);
-        FileOutputStream outStream = new FileOutputStream(dst);
-        FileChannel inChannel = inStream.getChannel();
-        FileChannel outChannel = outStream.getChannel();
-        inChannel.transferTo(0, inChannel.size(), outChannel);
-        inStream.close();
-        outStream.close();
-    }
-
     public static void copyFileOrDirectory(String srcDir, String dstDir) {
 
         try {
@@ -130,6 +121,13 @@ public class Util {
         }
     }
 
+    /**
+     * copyFile
+     * Copied Source from http://stackoverflow.com/questions/9292954/how-to-make-a-copy-of-a-file-in-android
+     * @param sourceFile
+     * @param destFile
+     * @throws IOException
+     */
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.getParentFile().exists())
             destFile.getParentFile().mkdirs();
@@ -153,5 +151,37 @@ public class Util {
                 destination.close();
             }
         }
+    }
+
+    /**
+     * deleteFile
+     * Deletes File or File and Subfolder of it
+     * @param file
+     * File to be deleted
+     */
+    public static void deleteFile(File file) {
+        if (file.isDirectory())
+        {
+            String[] children = file.list();
+            for (int i = 0; i < children.length; i++)
+            {
+                deleteFile(new File(file, children[i]));
+            }
+        }
+        file.delete();
+    }
+
+    /**
+     * getPathInfo
+     * Adds Current Path to Filename. To get absolute Path
+     * @param fileName
+     * @return String
+     * Current Path + param
+     */
+    public static String getPathInfo(File currentDir, String fileName) {
+        if(fileName == File.separator)
+            return fileName;
+
+        return currentDir.getAbsolutePath() + File.separator + fileName;
     }
 }

@@ -21,9 +21,8 @@ import java.util.List;
 
 
 /**
- * Created by Donny on 20.11.2016.
+ * Adapter to display Files in current Directiry.
  */
-
 public class ListViewAdapter extends ArrayAdapter<File> {
     private static final String TAG = "FHFLAPP: ListViewAdapter";
 

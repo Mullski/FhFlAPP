@@ -36,14 +36,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import static com.fileviewer.Util.copyFileOrDirectory;
-import static com.fileviewer.Util.copyFileToFile;
-import static com.fileviewer.Util.isReadable;
+import static com.fileviewer.Util.*;
 
 /**
  * Created by Donny on 17.11.2016.
  */
-
 public class FileViewerFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = "FHFLAPP: FileViewer";
 
@@ -102,6 +99,10 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         return fragmentView;
     }
 
+    /**
+     * When Fragment gets created. It sets the default path
+     * @param savedInstanceState
+     */
     public void initDir(Bundle savedInstanceState) {
         Log.v(TAG, "initDir():");
         if (savedInstanceState!=null && savedInstanceState.getSerializable(CURRENT_DIR_DIR) != null) {
@@ -135,6 +136,11 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         inflater.inflate(R.menu.fileviewer_menu, menu);
     }
 
+    /**
+     * Override onOptionsItemSelected.
+     * Gets fired when an Item is selected from Menu
+     * @param item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected():");
@@ -158,8 +164,8 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
                     public void onClick(DialogInterface dialog, int which) {
                         String inputText = input.getText().toString();
                         try {
-                            File newFile = new File(getPathInfo(inputText));
-                            Log.d(TAG, "NewFilePath " + getPathInfo(inputText));
+                            File newFile = new File(getPathInfo(currentDir, inputText));
+                            Log.d(TAG, "NewFilePath " + getPathInfo(currentDir, inputText));
                             newFile.createNewFile();
                             initCurrentDirAndChilren();
                         } catch (IOException e) {
@@ -195,8 +201,9 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String inputText = inputFolder.getText().toString();
-                        File newFolder = new File(getPathInfo(inputText));
-                        Log.d(TAG, "NewFolderPath " + getPathInfo(inputText) + "/");
+                        File newFolder = new File(getPathInfo(currentDir, inputText));
+                        Log.d(TAG, "NewFolderPath " + getPathInfo(currentDir, inputText) + "/");
+
                         if (!newFolder.exists()) {
                             newFolder.mkdirs();
                         }
@@ -224,6 +231,11 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    /**
+     * Override onContextItemSelected.
+     * Gets fired when an Item is selected from Context Menu
+     * @param item
+     */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         Log.d(TAG, "onContextItemSelected():");
@@ -271,7 +283,7 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         files.children.clear();
 
         for(String fileName : children) {
-            File child = new File(getPathInfo(fileName));
+            File child = new File(getPathInfo(currentDir, fileName));
             files.children.add(child);
         }
         Collections.sort(files.children, new Comparator<File>() {
@@ -293,6 +305,10 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         x.notifyDataSetChanged();
     }
 
+    /**
+     * onItemClick
+     * Gets fired when an File or Folder is clicked
+     */
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Log.v(TAG, "Clicked on an Item");
 
@@ -315,6 +331,12 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         super.onPause();
     }
 
+    /**
+     * updateDir
+     * This function is used to update current Folder
+     * @param newDir
+     * File (Folder)
+     */
     public void updateDir(File newDir){
         Log.v(TAG, "updateDir(" + newDir + "):");
         if(newDir.isDirectory() && newDir.canRead()) {
@@ -327,13 +349,14 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    public String getPathInfo(String fileName) {
-        if(fileName == File.separator)
-            return fileName;
 
-        return currentDir.getAbsolutePath() + File.separator + fileName;
-    }
 
+    /**
+     * openfile
+     * Sends Intent to open a File
+     * @param file
+     * File gets opened
+     */
     private void openFile(File file) {
         Log.v(TAG, "openFile()");
         Intent intent = new Intent();
@@ -352,7 +375,12 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
 
     }
 
-
+    /**
+     * checkReadPermissions
+     * Checks Permissions allow to read File
+     * @param file
+     * @return Boolean
+     */
     public Boolean checkReadPermissions(File file) {
         if(file.canRead()) {
             return true;
@@ -363,6 +391,13 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
             return false;
         }
     }
+
+    /**
+     * checkWritePermissions
+     * Checks Permissions allow to write File
+     * @param file
+     * @return Boolean
+     */
     public Boolean checkWritePermissions(File file) {
         if(file.canRead() && file.canWrite()) {
             return true;
@@ -372,18 +407,5 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
             toast.show();
             return false;
         }
-    }
-
-
-    public void deleteFile(File file) {
-        if (file.isDirectory())
-        {
-            String[] children = file.list();
-            for (int i = 0; i < children.length; i++)
-            {
-                deleteFile(new File(file, children[i]));
-            }
-        }
-        file.delete();
     }
 }
