@@ -16,7 +16,11 @@ import android.widget.ListView;
 
 import com.example.antonimuller.fhflapp.R;
 
+import java.util.ArrayList;
+
 import io.github.yavski.fabspeeddial.FabSpeedDial;
+
+import static android.R.attr.x;
 
 /**
  * Created by Sebastian Streich  on 25.10.2016.
@@ -25,13 +29,15 @@ import io.github.yavski.fabspeeddial.FabSpeedDial;
 public class TodoFragment extends Fragment implements
         View.OnClickListener, AdapterView.OnItemClickListener,
         FabSpeedDial.MenuListener, CreateCategoryDialog.CategoryListner,
-        SelectCategoryDialog.SelectionListener
+        SelectCategoryDialog.SelectionListener,
+        CreateTodoDialog.CreateTodoListener
 {
     final static String key ="Todo-Fragment";
 
 
     TodoListHolder  model;
     TodoListAdapter listAdapter;
+    ArrayList<TodoModel> viewModel;
     //ViewElements
     View            fragmentView;
     ListView        todoList;
@@ -39,6 +45,10 @@ public class TodoFragment extends Fragment implements
     CreateCategoryDialog   createCategoryDialog;
     SelectCategoryDialog   selectCategoryDialog;
     CreateTodoDialog       createTodoDialog;
+
+    String selectedCategory;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.todo_fragment, container, false);
@@ -54,6 +64,7 @@ public class TodoFragment extends Fragment implements
         createTodoDialog     = new CreateTodoDialog();
 
         selectCategoryDialog.setAllVisibility(true);
+        createTodoDialog.setCreateTodoListener(this);
         //Fetch the Model
         model = TodoListHolder.getMe();
         model.fetch(getActivity());
@@ -128,12 +139,38 @@ public class TodoFragment extends Fragment implements
 
     @Override
     public void OnSelectionChanged(String Category, int Index) {
+        selectedCategory = Category;
+
+
         if(Index <0){
             selectorButton.setText("Alle");
+            viewModel = model;
         }else{
             selectorButton.setText(Category);
+            viewModel = new ArrayList<>();
+            //Create a sublist of the Model
+            //Add all Todos matching the Category
+            for(int i=0; i< model.size(); i++){
+                TodoModel target = model.get(i);
+                if(target.category.equals(Category)){
+                    viewModel.add(target);
+                }
+
+            }
+
         }
 
+        listAdapter = new TodoListAdapter(getActivity(), R.layout.todo_row, viewModel);
+        todoList.setAdapter(listAdapter);
+    }
+
+    @Override
+    public void OnTodoCreated(TodoModel t) {
+        model.add(t);
+        if(selectedCategory != "Alle" && t.category == selectedCategory){
+            viewModel.add(t);
+        }
+        listAdapter.notifyDataSetChanged();
     }
 }
 

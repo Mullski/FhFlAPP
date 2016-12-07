@@ -61,7 +61,9 @@ public class CreateTodoDialog extends DialogFragment  implements DialogInterface
 
             if(t.length() >0){
                 TodoModel x = new TodoModel(t,selectedCategory);
-                TodoListHolder.getMe().add(x);
+                if(todoListener != null){
+                    todoListener.OnTodoCreated(x);
+                }
             }
 
         } else {
@@ -80,4 +82,12 @@ public class CreateTodoDialog extends DialogFragment  implements DialogInterface
         selectedCategory = Category;
         categoryButton.setText(Category);
     }
+
+    private CreateTodoListener todoListener;
+    public void setCreateTodoListener(CreateTodoListener l){ todoListener =l;}
+    public interface CreateTodoListener{
+        public void OnTodoCreated(TodoModel t);
+    }
+
+
 }
