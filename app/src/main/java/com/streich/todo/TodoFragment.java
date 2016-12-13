@@ -70,7 +70,7 @@ public class TodoFragment extends Fragment implements
         //Fetch the Model
         model = TodoListHolder.getMe();
         model.fetch(getActivity());
-
+        selectedCategory="Alle";
 
         //Connect the Model to the UI
         listAdapter = new TodoListAdapter(getActivity(), R.layout.todo_row, model);
@@ -111,12 +111,13 @@ public class TodoFragment extends Fragment implements
         builder.setPositiveButton("Ja Löschen", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                model.remove(clickedItem);
 
                 Log.v(key,"Deleting selected Item");
                 if( !selectedCategory.equals("Alle")  && clickedItem.category.equals(selectedCategory)) {
                     viewModel.remove(clickedItem);
                 }
+                model.remove(clickedItem);
+
                 listAdapter.notifyDataSetChanged();
             }
         });
