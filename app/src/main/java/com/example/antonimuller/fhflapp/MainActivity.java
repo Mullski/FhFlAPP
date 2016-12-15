@@ -14,6 +14,8 @@ import com.streich.todo.TodoFragment;
 import com.fileviewer.FileViewerFragment;
 
 
+import de.rp_byte.neroazure.chat.ChatFragment;
+
 import static com.example.antonimuller.fhflapp.R.id.toolbar;
 
 public class MainActivity extends AppCompatActivity
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity
 
     private TodoFragment todos;
     private FileViewerFragment fileView;
+    private ChatFragment chat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity
         exFragment2=new ExampleFragment(2);
         todos = new TodoFragment();
         fileView = new FileViewerFragment();
+        chat = new ChatFragment();
 
 
 
@@ -117,6 +121,13 @@ public class MainActivity extends AppCompatActivity
                 //File Viewer Fragment
                 fragTransaction = getFragmentManager().beginTransaction();
                 fragTransaction.replace(R.id.fragment_container, fileView);
+                fragTransaction.addToBackStack(null);
+                fragTransaction.commit();
+                break;
+            case R.id.chat:
+                //File Viewer Fragment
+                fragTransaction = getFragmentManager().beginTransaction();
+                fragTransaction.replace(R.id.fragment_container, chat);
                 fragTransaction.addToBackStack(null);
                 fragTransaction.commit();
                 break;
