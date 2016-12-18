@@ -22,6 +22,10 @@
             android:id="@+id/nav_Fviewer"
             android:icon="@drawable/ic_menu_manage"
             android:title="File Viewer" />
+        <item
+            android:id="@+id/chat"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Chat" />
     </group>
 
 
