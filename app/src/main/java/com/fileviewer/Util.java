@@ -104,6 +104,7 @@ public class Util {
             File dst = new File(dstDir, src.getName());
 
             if (src.isDirectory()) {
+                dst.mkdir();
 
                 String files[] = src.list();
                 int filesLength = files.length;
