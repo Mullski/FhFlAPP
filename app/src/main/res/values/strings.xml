@@ -13,4 +13,12 @@
     <string name="fileviewer_missingpermissions">Missing Permissions</string>
     <string name="fileviewer_openfileusing">Open File using</string>
     <string name="fileviewer_folderfiles">Elements</string>
+    <string name="fileviewer_delete">Delete</string>
+    <string name="fileviewer_open">Open</string>
+    <string name="fileviewer_copy">Copy</string>
+    <string name="fileviewer_paste">Paste</string>
+    <string name="fileviewer_newfile">New File</string>
+    <string name="fileviewer_newfolder">New Folder</string>
+    <string name="fileviewer_filename">Enter Filename</string>
+    <string name="fileviewer_foldername">Enter Foldername</string>
 </resources>

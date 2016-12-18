@@ -21,9 +21,8 @@ import java.util.List;
 
 
 /**
- * Created by Donny on 20.11.2016.
+ * Adapter to display Files in current Directiry.
  */
-
 public class ListViewAdapter extends ArrayAdapter<File> {
     private static final String TAG = "FHFLAPP: ListViewAdapter";
 
@@ -62,7 +61,7 @@ public class ListViewAdapter extends ArrayAdapter<File> {
 
             fileIcon.setImageDrawable(Util.getFileTypeIcon(getContext(), p));
 
-            if(!p.isFile() && p.list() != null) {
+            if(p.isDirectory() && p.list() != null) {
                 String eleString = getContext().getResources().getString(R.string.fileviewer_folderfiles);
                 folderElements.setText(p.list().length + " " + eleString);
             }
