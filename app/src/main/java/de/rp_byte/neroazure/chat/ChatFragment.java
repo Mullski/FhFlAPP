@@ -176,7 +176,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener,IRece
 
         Messages.add(new Message(sender,message_));
         ma.notifyDataSetChanged();
-        Log.i(TAG, "handleMessage: WTF?");
 
         Log.i(TAG, "handleMessage: Message received: \n"+
                 sender+ " : " + message_);
