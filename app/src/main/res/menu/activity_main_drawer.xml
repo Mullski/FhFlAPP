@@ -24,7 +24,7 @@
             android:title="File Viewer" />
         <item
             android:id="@+id/chat"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_chat_black_24dp"
             android:title="Chat" />
     </group>
 
