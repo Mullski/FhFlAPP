@@ -1,7 +1,8 @@
 package de.rp_byte.neroazure.chat;
 
 /**
- * Created by neroazure on 15-12-16.
+ * einfache Repräsentation einer Nachricht
+ * Created by neroazure
  */
 
 public class Message {
