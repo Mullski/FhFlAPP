@@ -2,7 +2,6 @@ package com.fileviewer;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -55,17 +54,6 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == REQUEST_WRITE_PERMISSION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Allowed");
-        }
-        else {
-            Toast toast = Toast.makeText(getActivity(), R.string.fileviewer_missingpermissions, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView():");
         super.onCreate(savedInstanceState);
@@ -81,44 +69,39 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
             }
         }
 
-
+        // Inflate Fragment and fetch UI Components
         fragmentView = inflater.inflate(R.layout.filev_fragment, container, false);
         fileList = (ListView) fragmentView.findViewById(R.id.listFiles);
 
-        files = ChildListings.getInstance();
-        x = new ListViewAdapter(getActivity(), R.layout.filev_entity, files);
 
+        // Init Filelist
+        files = ChildListings.getInstance();
+
+        // Connect Model to UI
+        x = new ListViewAdapter(getActivity(), R.layout.filev_entity, files);
         fileList.setAdapter(x);
         fileList.setOnItemClickListener(this);
 
-        initDir(savedInstanceState);
+        // Init Start Directory
+        currentDir = new File("/");
+        updateDir(currentDir);
 
         registerForContextMenu(fileList);
         return fragmentView;
     }
 
-    /**
-     * When Fragment gets created. It sets the default path
-     * @param savedInstanceState
-     */
-    public void initDir(Bundle savedInstanceState) {
-        Log.v(TAG, "initDir():");
-        if (savedInstanceState!=null && savedInstanceState.getSerializable(CURRENT_DIR_DIR) != null) {
-            currentDir = new File(savedInstanceState
-                    .getSerializable(CURRENT_DIR_DIR).toString());
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == REQUEST_WRITE_PERMISSION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Allowed");
         }
-        else
-        {
-            currentDir = new File("/");
+        else {
+            Toast toast = Toast.makeText(getActivity(), R.string.fileviewer_missingpermissions, Toast.LENGTH_SHORT);
+            toast.show();
         }
-        updateDir(currentDir);
     }
 
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putSerializable(CURRENT_DIR_DIR, currentDir.getAbsolutePath());
-    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -244,13 +227,19 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         return super.onContextItemSelected(item);
     }
 
-
+    /**
+     * initCurrentDirAndChilren
+     * Adds all child Files and Folder to ChildListings
+     * Also adds the parent Directory at first Position
+     */
     private void initCurrentDirAndChilren() {
         Log.d(TAG, "initCurrentDirAndChilren():");
+        // Update Current Dir to recive new List
         currentDir = new File(currentDir.getAbsolutePath());
         String[] children = currentDir.list();
         files.clear();
 
+        // Add all files from list
         for(String fileName : children) {
             File child = new File(getPathInfo(currentDir, fileName));
             files.add(child);
@@ -369,12 +358,17 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         }
     }
 
-
+    /**
+     * createBuilder
+     * Creates Input Box with given Edit Text Field.
+     * @param title Title of Builder
+     * @param input Edittext Field
+     * @param listener Listener when Button Ok is clicked.
+     */
     public void createBuilder(int title, EditText input,DialogInterface.OnClickListener listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
         builder.setTitle(title);
-
-
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
