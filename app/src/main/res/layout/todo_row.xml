@@ -1,23 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout
-        android:orientation="horizontal" android:layout_width="match_parent"
-        android:descendantFocusability="blocksDescendants"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingLeft="5dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    >
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/todo_row_checkBox"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:layout_weight="1" />
+    <CheckBox
+        android:id="@+id/todo_row_checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/todo_row_title"
-            android:text="lel"
-           />
-</LinearLayout>
+    <TextView
+        android:id="@+id/todo_row_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/todo_row_checkBox"
+        android:layout_alignBottom="@+id/todo_row_checkBox"
+        android:layout_toEndOf="@+id/todo_row_checkBox"
+        android:layout_toRightOf="@+id/todo_row_checkBox"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:text="Hello Wolrd" />
+</RelativeLayout>
+
+
