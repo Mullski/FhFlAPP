@@ -28,13 +28,10 @@ import android.widget.Toast;
 
 import com.example.antonimuller.fhflapp.R;
 import com.fileviewer.Adapter.ListViewAdapter;
-import com.fileviewer.Model.ListingsModel;
+import com.fileviewer.Model.ChildListings;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import static com.fileviewer.Util.*;
 
@@ -49,9 +46,10 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
     private static final int REQUEST_WRITE_PERMISSION = 786;
 
     private View fragmentView;
+
     public File currentDir;
     public File copyFile = null;
-    private ListingsModel files;
+    private ChildListings files;
     private ListView fileList;
     private ListViewAdapter x;
 
@@ -87,8 +85,8 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         fragmentView = inflater.inflate(R.layout.filev_fragment, container, false);
         fileList = (ListView) fragmentView.findViewById(R.id.listFiles);
 
-        files = new ListingsModel(new ArrayList<File>());
-        x = new ListViewAdapter(getActivity(), R.layout.filev_entity, files.children);
+        files = ChildListings.getInstance();
+        x = new ListViewAdapter(getActivity(), R.layout.filev_entity, files);
 
         fileList.setAdapter(x);
         fileList.setOnItemClickListener(this);
@@ -151,18 +149,11 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
                     return true;
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle(R.string.fileviewer_filename);
-
-                final EditText input = new EditText(getActivity());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
-
-                // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                final EditText editTextName = new EditText(getActivity());
+                createBuilder(R.string.fileviewer_filename, editTextName, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String inputText = input.getText().toString();
+                        String inputText = editTextName.getText().toString();
                         try {
                             File newFile = new File(getPathInfo(currentDir, inputText));
                             Log.d(TAG, "NewFilePath " + getPathInfo(currentDir, inputText));
@@ -173,14 +164,6 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
                         }
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
 
                 return true;
             case R.id.action_createfolder:
@@ -190,17 +173,11 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
                     return true;
                 }
 
-                AlertDialog.Builder builderFolder = new AlertDialog.Builder(getActivity());
-                builderFolder.setTitle(R.string.fileviewer_foldername);
-
-                final EditText inputFolder = new EditText(getActivity());
-                inputFolder.setInputType(InputType.TYPE_CLASS_TEXT);
-                builderFolder.setView(inputFolder);
-
-                builderFolder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                final EditText editTextFolderName = new EditText(getActivity());
+                createBuilder(R.string.fileviewer_foldername, editTextFolderName, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String inputText = inputFolder.getText().toString();
+                        String inputText = editTextFolderName.getText().toString();
                         File newFolder = new File(getPathInfo(currentDir, inputText));
                         Log.d(TAG, "NewFolderPath " + getPathInfo(currentDir, inputText) + "/");
 
@@ -210,14 +187,6 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
                         initCurrentDirAndChilren();
                     }
                 });
-                builderFolder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builderFolder.show();
                 return true;
             case R.id.action_paste:
                 Log.d(TAG, "action_paste():");
@@ -280,26 +249,17 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
         Log.d(TAG, "initCurrentDirAndChilren():");
         currentDir = new File(currentDir.getAbsolutePath());
         String[] children = currentDir.list();
-        files.children.clear();
+        files.clear();
 
         for(String fileName : children) {
             File child = new File(getPathInfo(currentDir, fileName));
-            files.children.add(child);
+            files.add(child);
         }
-        Collections.sort(files.children, new Comparator<File>() {
-            @Override
-            public int compare(File file1, File file2) {
-                if(!file2.isFile() && file1.isFile()) {
-                    return 1;
-                }
-                else {
-                    return -1;
-                }
-            }
-        });
+
+        files.sort();
 
         if(currentDir.getParent() != null) {
-            files.children.add(0, currentDir.getParentFile());
+            files.add(0, currentDir.getParentFile());
         }
 
         x.notifyDataSetChanged();
@@ -377,7 +337,7 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
 
     /**
      * checkReadPermissions
-     * Checks Permissions allow to read File
+     * Checks Permissions allow to read File. If not sets Toast to inform
      * @param file
      * @return Boolean
      */
@@ -394,7 +354,7 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
 
     /**
      * checkWritePermissions
-     * Checks Permissions allow to write File
+     * Checks Permissions allow to write File. If not sets Toast to inform
      * @param file
      * @return Boolean
      */
@@ -407,5 +367,26 @@ public class FileViewerFragment extends Fragment implements View.OnClickListener
             toast.show();
             return false;
         }
+    }
+
+
+    public void createBuilder(int title, EditText input,DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+
+
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", listener);
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 }

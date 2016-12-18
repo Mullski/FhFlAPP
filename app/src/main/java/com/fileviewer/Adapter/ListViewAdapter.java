@@ -1,7 +1,6 @@
 package com.fileviewer.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.antonimuller.fhflapp.R;
-import com.fileviewer.Model.ListingsModel;
 import com.fileviewer.Util;
-import com.streich.todo.TodoModel;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

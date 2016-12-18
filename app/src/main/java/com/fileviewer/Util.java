@@ -25,7 +25,7 @@ public class Util {
      */
     public static Drawable getFileTypeIcon(Context mContext, File file) {
         if(!file.isFile()) {
-            if (!file.canRead() && !file.canWrite()) {
+            if (!file.canRead()) {
                 return mContext.getResources().getDrawable(R.drawable.folderfilled72);
             }
             else {
