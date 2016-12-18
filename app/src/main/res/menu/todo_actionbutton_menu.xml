@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/todo_new_category"
+        android:icon="@drawable/ic_create_new_folder_black_24dp"
+        android:title="Neue Kategorie" />
+
+    <item
+        android:id="@+id/todo_new_todo"
+        android:icon="@drawable/ic_note_add_black_24dp"
+        android:title="Neue Todo" />
+
+</menu>

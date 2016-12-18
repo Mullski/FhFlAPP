@@ -35,7 +35,6 @@ public class TodoListAdapter extends ArrayAdapter<TodoModel>{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         // Inflate the View for a Row
         View v = convertView;
 
@@ -45,6 +44,7 @@ public class TodoListAdapter extends ArrayAdapter<TodoModel>{
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
             v = vi.inflate(R.layout.todo_row, null);
+
         }
 
         //Get the Asscociated Model
