@@ -21,4 +21,12 @@
     <string name="fileviewer_newfolder">New Folder</string>
     <string name="fileviewer_filename">Enter Filename</string>
     <string name="fileviewer_foldername">Enter Foldername</string>
+
+    <string name="navapp_app_name">HSFL-NavApp</string>
+    <string name="navapp_action_pois">Wegpunkte</string>
+    <string name="navapp_copyright">© OpenStreetMap contributors</string>
+    <string name="navapp_show_nav">Zeige Luftlinie</string>
+    <string name="navapp_hide_nav">Lösche Luftlinie</string>
+    <string name="navapp_own_pois">Eigene Wegpunkte</string>
+    <string name="navapp_save">Aktuellen Standort speichern</string>
 </resources>
