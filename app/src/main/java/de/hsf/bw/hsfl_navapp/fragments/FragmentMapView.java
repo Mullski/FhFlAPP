@@ -18,7 +18,7 @@ import org.osmdroid.views.MapView;
 import org.w3c.dom.Text;
 
 import de.hsf.bw.hsfl_navapp.BuildConfig;
-import de.hsf.bw.hsfl_navapp.R;
+import com.example.antonimuller.fhflapp.R;
 import de.hsf.bw.hsfl_navapp.map.MapHandler;
 import de.hsf.bw.hsfl_navapp.map.waypoints.Waypoint;
 

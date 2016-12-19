@@ -14,7 +14,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import de.hsf.bw.hsfl_navapp.R;
+import com.example.antonimuller.fhflapp.R;
 import de.hsf.bw.hsfl_navapp.gpx.GPXReader;
 import de.hsf.bw.hsfl_navapp.gpx.GPXWriter;
 import de.hsf.bw.hsfl_navapp.interfaces.OnWaypointSelectedListener;

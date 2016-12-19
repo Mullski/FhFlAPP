@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.hsf.bw.hsfl_navapp.R;
+import com.example.antonimuller.fhflapp.R;
 import de.hsf.bw.hsfl_navapp.gpx.GPXWriter;
 import de.hsf.bw.hsfl_navapp.map.waypoints.Waypoint;
 

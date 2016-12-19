@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import de.hsf.bw.hsfl_navapp.R;
+import com.example.antonimuller.fhflapp.R;
 import de.hsf.bw.hsfl_navapp.gpx.GPXReader;
 import de.hsf.bw.hsfl_navapp.interfaces.OnWaypointSelectedListener;
 import de.hsf.bw.hsfl_navapp.map.waypoints.WaypointAdapter;
