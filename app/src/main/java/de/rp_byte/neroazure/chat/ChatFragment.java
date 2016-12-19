@@ -13,12 +13,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import java.net.SocketException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.example.antonimuller.fhflapp.R;
 
-import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Arrays;
+/**
+ * Fragment für den Chat, instanziert den Datagram Service und holt sich ein Multicastlock.
+ * Ist auh der ReceiveListener für den DatagramService.
+ * created by neroazure
+ */
 
 public class ChatFragment extends Fragment implements View.OnClickListener,IReceiveListener{
     private final String TAG = "RPB/ChatFrag";
@@ -66,6 +72,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener,IRece
         lm.setAdapter(ma);
 
         try {
+            // erstellen und starten des Datagramservices
             serv = new DatagramService(this,getActivity());
 
             serv.start();
@@ -79,6 +86,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener,IRece
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        //Holen des Multicastlocks
         WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         lock = wifi.createMulticastLock("RPB");
         lock.acquire();
@@ -89,23 +97,27 @@ public class ChatFragment extends Fragment implements View.OnClickListener,IRece
     public void onPause(){
         super.onPause();
         serv.stop();
+        //Freigeben des Locks
         if (lock.isHeld())
             lock.release();
     }
 
 
-    //Method to send text
+    //Click-Listener
     @Override
     public void onClick(View v) {
         String message = input.getText().toString();
         String name_ = name.getText().toString();
 
+        //gesendet wird nur wenn auch eine Nachricht da ist,
+        //sowie auch ein Name
         if (message.length() > 0 && name_.length() > 0){
             input.setText("");
 
-            byte[] namepadded = pad(name_.getBytes(),32);
-            byte[] messagepadded = pad(message.getBytes(),992);
+            byte[] namepadded = pad(name_.getBytes(Charset.forName("UTF-8")),32);
+            byte[] messagepadded = pad(message.getBytes(Charset.forName("UTF-8")),992);
 
+            //Debug und senden des Texts
             Log.i(TAG, "onClick: Sent? "+serv.send(concat(namepadded,messagepadded)));
         }
     }
@@ -128,6 +140,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener,IRece
         return padded;
     }
 
+    //Textwatcher zum überprüfen der Byte-Länge der EditFelder
     public TextWatcher getWatcher(final int length, final String forn, final boolean debug){
         return new TextWatcher() {
             @Override
@@ -141,7 +154,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener,IRece
 
                 if(debug)
                     Log.i(TAG, "afterTextChanged for "+forn+": Length is "+
-                            name.getBytes().length+" Bytes and "+name.length()+" Characters");
+                            name.getBytes(Charset.forName("UTF-8")).length+" Bytes and "+name.length()+" Characters");
 
                 if(name.getBytes().length > length){
                     s.delete(s.length()-1,s.length());
@@ -150,9 +163,9 @@ public class ChatFragment extends Fragment implements View.OnClickListener,IRece
         };
     }
 
+    //Handler fürs empfangen von Nachrichten
     @Override
     public void handleMessage(byte[] message) {
-
 
         int endindexn = 32;
         for (int i = 0; i < 32;i++) {
@@ -171,8 +184,8 @@ public class ChatFragment extends Fragment implements View.OnClickListener,IRece
             }
         }
 
-        String sender = new String(Arrays.copyOfRange(message,0,endindexn));
-        String message_ = new String(Arrays.copyOfRange(message,32,endindexm));
+        String sender = new String(Arrays.copyOfRange(message,0,endindexn), Charset.forName("UTF-8"));
+        String message_ = new String(Arrays.copyOfRange(message,32,endindexm), Charset.forName("UTF-8"));
 
         Messages.add(new Message(sender,message_));
         ma.notifyDataSetChanged();

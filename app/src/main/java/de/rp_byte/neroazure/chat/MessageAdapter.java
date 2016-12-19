@@ -12,7 +12,8 @@ import com.example.antonimuller.fhflapp.R;
 import java.util.List;
 
 /**
- * Created by neroazure on 15-12-16.
+ * Adapter für die Listview in ChatFragment
+ * Created by neroazure
  */
 
 public class MessageAdapter extends ArrayAdapter<Message> {

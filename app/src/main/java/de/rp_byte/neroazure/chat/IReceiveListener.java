@@ -1,7 +1,8 @@
 package de.rp_byte.neroazure.chat;
 
 /**
- * Created by neroazure on 08-12-16.
+ * Interface für einen Handler zum Empfangen von Daten über den DatagramService
+ * Created by neroazure
  */
 public interface IReceiveListener {
     /**

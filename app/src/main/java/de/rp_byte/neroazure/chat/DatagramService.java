@@ -15,13 +15,14 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 /**
- * Created by neroazure on 08-12-16.
+ * DatagramService für das Chatfragment, um das networking aus dem hauptcode raus zu halten,
+ * entsprechend sind die AsyncTasks dafür da um das Networking aus dem Mainthread raus zu halten.
+ * Created by neroazure
  */
 
 public class DatagramService {
     private final static String TAG = "RPB/DatagramService";
     private IReceiveListener rcv;
-
 
     private DatagramSocket dtgms;
     private DatagramSocket ddtgms;
@@ -33,6 +34,7 @@ public class DatagramService {
     AsyncTask<Void,Void,Void> receiver = new AsyncTask<Void, Void, Void>(){
         protected Void doInBackground(Void... params) {
             try {
+                //der Socket zum Senden wird hier auch initialisiert
                 ddtgms.connect(InetAddress.getByName("255.255.255.255"),8888);
             } catch (UnknownHostException e) {
                 Log.e(TAG, "Receiver: ", e);
@@ -43,6 +45,7 @@ public class DatagramService {
                     DatagramPacket dp = new DatagramPacket(buffer,buffer.length);
                     dtgms.receive(dp);
                     final byte[] data = dp.getData();
+                    //musste so gemacht werden, damit die UI elemente Hinzufügen werden konnten
                     caller.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -61,8 +64,10 @@ public class DatagramService {
         rcv = ircv;
         dtgms = new DatagramSocket(8888);
         dtgms.setBroadcast(true);
+
         ddtgms = new DatagramSocket();
         ddtgms.setBroadcast(true);
+
         this.caller = caller;
         Log.i(TAG, "DatagramService: Service created!");
     }
