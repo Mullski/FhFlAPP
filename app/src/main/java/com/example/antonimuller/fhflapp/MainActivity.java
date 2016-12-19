@@ -116,7 +116,10 @@ public class MainActivity extends AppCompatActivity
                 fragTransaction.commit();
                 break;
             case R.id.nav_navi:
-                //nav Fragment
+                fragTransaction = getFragmentManager().beginTransaction();
+                fragTransaction.replace(R.id.fragment_container, fragmentMapView);
+                fragTransaction.addToBackStack(null);
+                fragTransaction.commit();
                 break;
             case R.id.nav_radio:
                 //radio Fragment
