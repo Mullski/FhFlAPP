@@ -4,27 +4,27 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_editor"
-            android:icon="@drawable/ic_border_color_black_24dp"
+            android:icon="@drawable/ic_menu_camera"
             android:title="Editor" />
         <item
             android:id="@+id/nav_tdList"
-            android:icon="@drawable/ic_assignment_black_24dp"
+            android:icon="@drawable/ic_menu_camera"
             android:title="To-DO-Liste" />
         <item
             android:id="@+id/nav_navi"
-            android:icon="@drawable/ic_navigation_black_24dp"
+            android:icon="@drawable/ic_menu_slideshow"
             android:title="Navi" />
         <item
             android:id="@+id/nav_radio"
-            android:icon="@drawable/ic_radio_black_24dp"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Internet-Radio" />
         <item
             android:id="@+id/nav_Fviewer"
-            android:icon="@drawable/ic_insert_drive_file_black_24dp"
+            android:icon="@drawable/ic_menu_manage"
             android:title="File Viewer" />
         <item
             android:id="@+id/chat"
-            android:icon="@drawable/ic_chat_black_24dp"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Chat" />
     </group>
 

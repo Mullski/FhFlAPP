@@ -111,11 +111,7 @@ public class Util {
                     String src1 = (new File(src, files[i]).getPath());
                     String dst1 = dst.getPath();
                     copyFileOrDirectory(src1, dst1);
-                }
 
-                // Fix if no child in directory
-                if(!dst.exists()) {
-                    dst.mkdir();
                 }
             } else {
                 copyFile(src, dst);
@@ -167,11 +163,10 @@ public class Util {
         if (file.isDirectory())
         {
             String[] children = file.list();
-            int childrenLength = children.length;
-            for (int i = 0; i < childrenLength; i++) {
+            for (int i = 0; i < children.length; i++)
+            {
                 deleteFile(new File(file, children[i]));
             }
-
         }
         file.delete();
     }
