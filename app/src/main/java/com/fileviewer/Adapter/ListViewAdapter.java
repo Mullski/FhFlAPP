@@ -52,7 +52,7 @@ public class ListViewAdapter extends ArrayAdapter<File> {
             TextView folderElements = (TextView) view.findViewById(R.id.file_folderelements);
             ImageView fileIcon = (ImageView) view.findViewById(R.id.file_icon);
 
-            if(p.getName().length() == 0)
+            /*if(p.getName().length() == 0)
                 fileName.setText(R.string.fileviewer_homedirectory);
             else
                 fileName.setText(p.getName());
@@ -65,7 +65,7 @@ public class ListViewAdapter extends ArrayAdapter<File> {
             if(!p.isFile() && p.list() != null) {
                 String eleString = getContext().getResources().getString(R.string.fileviewer_folderfiles);
                 folderElements.setText(p.list().length + " " + eleString);
-            }
+            }*/
         }
 
         return view;

@@ -1,4 +1,4 @@
-package com.example.antonimuller.fhflapp;
+package com.texteditor;
 
 import android.app.Activity;
 

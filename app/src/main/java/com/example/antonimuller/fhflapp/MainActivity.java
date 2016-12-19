@@ -1,7 +1,5 @@
 package com.example.antonimuller.fhflapp;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,14 +8,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.MultiAutoCompleteTextView;
 
 import com.streich.todo.TodoFragment;
-
-import static com.example.antonimuller.fhflapp.R.id.toolbar;
+import com.texteditor.TextEditorFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -28,7 +23,6 @@ public class MainActivity extends AppCompatActivity
 
     private TodoFragment todos;
     private TextEditorFragment textEditorFragment;
-
 
 
     @Override
@@ -42,7 +36,8 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        textEditorFragment = new TextEditorFragment(getIntent());
+        textEditorFragment = new TextEditorFragment();
+        textEditorFragment.setIntent(getIntent());
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_container, textEditorFragment).commit();
 

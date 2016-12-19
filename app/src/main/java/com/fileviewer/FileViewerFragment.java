@@ -32,7 +32,7 @@ import java.util.Comparator;
  */
 
 public class FileViewerFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener , ActivityCompat.OnRequestPermissionsResultCallback {
-    private static final String TAG = "FHFLAPP: FileViewerFragment";
+    private static final String TAG = "FHFL:FileViewerFragment";
 
     private static final String CURRENT_DIR_DIR = "current-dir";
 
