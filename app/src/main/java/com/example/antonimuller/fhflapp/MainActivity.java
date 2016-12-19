@@ -15,6 +15,7 @@ import com.fileviewer.FileViewerFragment;
 
 
 import de.rp_byte.neroazure.chat.ChatFragment;
+import de.hsf.bw.hsfl_navapp.fragments.FragmentMapView;
 
 import static com.example.antonimuller.fhflapp.R.id.toolbar;
 
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity
     private TodoFragment todos;
     private FileViewerFragment fileView;
     private ChatFragment chat;
+    
+    private FragmentMapView mapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +42,8 @@ public class MainActivity extends AppCompatActivity
         fileView = new FileViewerFragment();
         chat = new ChatFragment();
 
-
+        fragmentMapView = new FragmentMapView();
+        fragmentMapView.init(getApplicationContext());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
