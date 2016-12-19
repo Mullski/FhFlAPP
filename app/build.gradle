@@ -28,5 +28,6 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'io.github.yavski:fab-speed-dial:1.0.6'
+    compile 'org.osmdroid:osmdroid-android:5.5:release@aar'
     testCompile 'junit:junit:4.12'
 }
