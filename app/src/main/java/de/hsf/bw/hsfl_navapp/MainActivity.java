@@ -17,8 +17,6 @@ import de.hsf.bw.hsfl_navapp.fragments.FragmentSavePOI;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "fhflMainActivity";
 
-    public static final GeoPoint START_GEOPOINT = new GeoPoint(54.77493, 9.44987);
-
     private FragmentMapView fragmentMapView;
     private FragmentPOI fragmentPOI;
     private FragmentOwnPOI fragmentOwnPOI;
@@ -30,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         fragmentMapView = new FragmentMapView();
-        fragmentMapView.setUserAgent(BuildConfig.APPLICATION_ID);
 
         fragmentPOI = new FragmentPOI();
         fragmentOwnPOI = new FragmentOwnPOI();

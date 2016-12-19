@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.w3c.dom.Text;
 
+import de.hsf.bw.hsfl_navapp.BuildConfig;
 import de.hsf.bw.hsfl_navapp.R;
 import de.hsf.bw.hsfl_navapp.map.MapHandler;
 import de.hsf.bw.hsfl_navapp.map.waypoints.Waypoint;
@@ -25,12 +27,14 @@ public class FragmentMapView extends Fragment {
     private FloatingActionButton floatingActionButton_PanToUser;
     private TextView txtV_currentSpeed;
 
-    public FragmentMapView() {
 
+
+    public FragmentMapView() {
+        setUserAgent();
     }
 
-    public void setUserAgent(String applicationId) {
-        org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setUserAgentValue(applicationId);
+    private void setUserAgent() {
+        org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
     }
 
     @Override

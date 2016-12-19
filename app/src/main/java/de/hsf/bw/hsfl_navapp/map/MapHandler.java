@@ -36,6 +36,8 @@ import de.hsf.bw.hsfl_navapp.map.waypoints.Waypoint;
 public class MapHandler implements OnWaypointSelectedListener {
     private static final String TAG = "fhflMapHandler";
 
+    public static final GeoPoint START_GEOPOINT = new GeoPoint(54.77493, 9.44987);
+
     private MapView mapView;
     private IMapController mapController;
 
@@ -65,7 +67,7 @@ public class MapHandler implements OnWaypointSelectedListener {
         this.mapView.setBuiltInZoomControls(true);
 
         mapController = this.mapView.getController();
-        mapController.setCenter(MainActivity.START_GEOPOINT);
+        mapController.setCenter(START_GEOPOINT);
         mapController.setZoom(19);
 
         Context context = parent.getApplicationContext();
