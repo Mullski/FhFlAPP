@@ -108,7 +108,9 @@ public class TextEditorFragment extends Fragment
                     while ((line = bufferedReader.readLine()) != null) {
                         sb.append(line);
                     }
-                    multiAutoCompleteTextView11.setText((sb.toString()));
+                    String result = sb.toString();
+                    result.replaceAll("\\\\n", "\\\n");
+                    multiAutoCompleteTextView11.setText((result));
                     openFilePath = url;
                 }
                 catch(Exception e){
