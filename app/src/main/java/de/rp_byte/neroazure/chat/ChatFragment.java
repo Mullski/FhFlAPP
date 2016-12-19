@@ -98,7 +98,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener,IRece
         super.onPause();
         serv.stop();
         //Freigeben des Locks
-        if (lock.isHeld())
+        if (lock != null && lock.isHeld())//null check hinzugefügt, in einigen fällen stürz die app sonst ab
             lock.release();
     }
 

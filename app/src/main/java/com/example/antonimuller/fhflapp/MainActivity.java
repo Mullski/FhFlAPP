@@ -1,5 +1,7 @@
 package com.example.antonimuller.fhflapp;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -8,25 +10,32 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.streich.todo.TodoFragment;
-import com.fileviewer.FileViewerFragment;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 
 import de.rp_byte.neroazure.chat.ChatFragment;
 
 import static com.example.antonimuller.fhflapp.R.id.toolbar;
 
+import com.fileviewer.FileViewerFragment;
+import com.streich.todo.TodoFragment;
+import com.texteditor.TextEditorFragment;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    String TAG ="MainActivity";
 
     private ExampleFragment exFragment1;
     private ExampleFragment exFragment2;
-
     private TodoFragment todos;
     private FileViewerFragment fileView;
     private ChatFragment chat;
+    private TextEditorFragment textEditorFragment;
+    ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +47,15 @@ public class MainActivity extends AppCompatActivity
         todos = new TodoFragment();
         fileView = new FileViewerFragment();
         chat = new ChatFragment();
+        textEditorFragment = new TextEditorFragment();
+        textEditorFragment.setIntent(getIntent());
 
-
-
+        
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, exFragment1).commit();
+                .replace(R.id.fragment_container, exFragment1).commit();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -57,6 +66,29 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        final Activity activity = this;
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+
+            private float last = 0;
+
+            @Override
+            public void onDrawerSlide(View arg0, float arg1) {
+                InputMethodManager inputMethodManager = (InputMethodManager) activity
+                        .getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(
+                        activity.getCurrentFocus().getWindowToken(),
+                        0
+                );
+            }
+
+            @Override public void onDrawerStateChanged(int arg0) {}
+            @Override public void onDrawerOpened(View arg0) {}
+            @Override public void onDrawerClosed(View arg0) {}
+
+        });
+
+
     }
 
     @Override
@@ -90,6 +122,11 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+    /*
+
+    InputMethodManager inputMethodManager = (InputMethodManager)  this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+    inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+     */
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -100,7 +137,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_editor:
 
                 FragmentTransaction fragTransaction = getFragmentManager().beginTransaction();
-                fragTransaction.replace(R.id.fragment_container, exFragment1);
+                fragTransaction.replace(R.id.fragment_container, textEditorFragment);
                 fragTransaction.addToBackStack(null);
                 fragTransaction.commit();
                 break;
