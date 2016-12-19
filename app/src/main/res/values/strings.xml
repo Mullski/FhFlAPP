@@ -21,4 +21,9 @@
     <string name="fileviewer_newfolder">New Folder</string>
     <string name="fileviewer_filename">Enter Filename</string>
     <string name="fileviewer_foldername">Enter Foldername</string>
+
+
+    <string name="texteditor_open_text_file">Öffnen</string>
+    <string name="texteditor_save_text_file">Speichern</string>
+    <string name="texteditor_save_text_file_as">Speichern als</string>
 </resources>
