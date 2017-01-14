@@ -1,0 +1,45 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/fragment_map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_nav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@android:color/white"
+        android:src="@drawable/ic_menu_mylocation"/>
+        //android:src="@drawable/ic_my_location_black_24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:padding="2.5dp"
+        android:textSize="12sp"
+        android:background="@color/colorCopyrightBG"
+        android:text="@string/navapp_copyright"/>
+
+    <TextView
+        android:id="@+id/textview_currentspeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="2.5dp"
+        android:textSize="16sp"
+        android:background="@color/colorCopyrightBG"
+        android:text="Geschwindigkeit: 0 kmh/h"/>
+
+</RelativeLayout>

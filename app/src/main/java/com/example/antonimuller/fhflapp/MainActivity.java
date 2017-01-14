@@ -22,6 +22,7 @@ import de.rp_byte.neroazure.chat.ChatFragment;
 import static com.example.antonimuller.fhflapp.R.id.toolbar;
 
 import com.fileviewer.FileViewerFragment;
+import com.navi.FragmentMapView;
 import com.streich.todo.TodoFragment;
 import com.texteditor.TextEditorFragment;
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity
     private ExampleFragment exFragment1;
     private ExampleFragment exFragment2;
     private TodoFragment todos;
+    private FragmentMapView fragmentMapView;
     private FileViewerFragment fileView;
     private ChatFragment chat;
     private TextEditorFragment textEditorFragment;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity
         exFragment1=new ExampleFragment(1);
         exFragment2=new ExampleFragment(2);
         todos = new TodoFragment();
+        fragmentMapView = new FragmentMapView();
+        fragmentMapView.init(getApplicationContext());
         fileView = new FileViewerFragment();
         chat = new ChatFragment();
         textEditorFragment = new TextEditorFragment();
@@ -150,6 +154,10 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_navi:
                 //nav Fragment
+                fragTransaction = getFragmentManager().beginTransaction();
+                fragTransaction.replace(R.id.fragment_container, fragmentMapView);
+                fragTransaction.addToBackStack(null);
+                fragTransaction.commit();
                 break;
             case R.id.nav_radio:
                 //radio Fragment

@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="badass">#BADA55</color>
+    <color name="colorCopyrightBG">#BFFFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

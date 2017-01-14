@@ -26,4 +26,12 @@
     <string name="texteditor_open_text_file">Öffnen</string>
     <string name="texteditor_save_text_file">Speichern</string>
     <string name="texteditor_save_text_file_as">Speichern als</string>
+
+    <string name="navapp_app_name">HSFL-NavApp</string>
+    <string name="navapp_action_pois">Wegpunkte</string>
+    <string name="navapp_copyright">© OpenStreetMap contributors</string>
+    <string name="navapp_show_nav">Zeige Luftlinie</string>
+    <string name="navapp_hide_nav">Lösche Luftlinie</string>
+    <string name="navapp_own_pois">Eigene Wegpunkte</string>
+    <string name="navapp_save">Aktuellen Standort speichern</string>
 </resources>
