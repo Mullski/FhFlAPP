@@ -99,7 +99,7 @@ public class MapHandler implements OnWaypointSelectedListener {
 
                 if(l.hasSpeed()) {
                     float speed = l.getSpeed();
-                    txtV_currentSpeed.setText("Geschwindigkeit: " + speed + " km/h");
+                    txtV_currentSpeed.setText("Geschwindigkeit: " + speed + " m/s");
                 }
 
                 navigationOverlay.setNewUserLocation(userLocation);
